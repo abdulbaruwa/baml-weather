@@ -1,4 +1,6 @@
-﻿namespace Baml.Weather.Web.Core.Dtos
+﻿using System;
+
+namespace Baml.Weather.Web.Core.Dtos
 {
     public class WeatherDto
     {
@@ -6,5 +8,7 @@
         public string Locale { get; set; }
         public int LocaleId { get; set; }
         public TimedWeatherDetail[] TimedWeatherDetail { get; set; }
+        public DateTimeOffset TimeFetched { get; set; }
     }
+
 }

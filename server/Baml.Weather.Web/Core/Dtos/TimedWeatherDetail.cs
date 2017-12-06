@@ -4,6 +4,8 @@ namespace Baml.Weather.Web.Core.Dtos
 {
     public class TimedWeatherDetail
     {
+        public Guid Id { get; set; }
+        public int LocaleId { get; set; }
         public string Day { get; set; }
         public double Temperature { get; set; }
         public double Wind { get; set; }
