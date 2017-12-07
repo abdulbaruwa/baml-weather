@@ -10,7 +10,7 @@ using Bogus;
 using Moq;
 using Xunit;
 
-namespace Baml.Weather.Web.UnitTests.Unit
+namespace Baml.Weather.Web.Tests.Units
 {
     public class FetchManagerTests
     {
@@ -77,7 +77,6 @@ namespace Baml.Weather.Web.UnitTests.Unit
 
         public static LocationWeather LocationWeather(int cityId)
         {
-            // var xx = new Faker<City>().RuleForType(typeof(string), x => Guid.NewGuid().ToString()).Generate();
             Randomizer.Seed = new Random(8675309);
             var city = FakerT<City>.FakeIt();
             var main = FakerT<Main>.FakeIt();
