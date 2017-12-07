@@ -1,0 +1,113 @@
+<div class="">
+  <ng-template #tabTemplate let-dayEntity="weatherDay">
+    <div>
+      <div>{{dayEntity}}</div>
+
+    </div>
+
+  </ng-template>
+
+  <ng-template #tabTemplate2>
+    <div>Today </div>
+  </ng-template>
+
+  <ng-container *ngIf="(currentDayWeather && fiveDayWeather)">
+    <div style="background-color: rgba(57, 99, 155, 0.07);" class="col-md-6 col-md-offset-3">
+      <div class=row>
+        <div style="margin: 50px">
+          <div class="col-md-12">
+            <div class="row">
+              <div class="baml_header col-md-8">
+                <!-- <div role="heading" aria-level="2">{{currentDayWeather.locale}}</div> -->
+                <div role="heading" aria-level="2">UPDATED {{lastUpdate}}</div>
+              </div>
+
+              <div class="col-md-4">
+                <mat-form-field class="weather-local-from-field">
+                    <input #searchBox id="search-box" matInput placeholder="City" aria-label="State" [value]="selectedLocation.name"  [matAutocomplete]="auto"  (keyup)="search(searchBox.value)" >
+                    <mat-autocomplete #auto="matAutocomplete">
+                      <mat-option *ngFor="let state of locales | async" [value]="state.name" (onSelectionChange)="onLocationChange($event)">
+                        <!-- <img style="vertical-align:middle;" aria-hidden src="{{state.flag}}" height="25" /> -->
+                        <span>{{state.name}}</span> |
+                        <small>Country: {{state.country}}</small>
+                      </mat-option>
+                    </mat-autocomplete>
+                  </mat-form-field>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-12">
+            <div class="row">
+              <button mat-raised-button style="width:80px">Back</button>
+              <button mat-raised-button style="width:80px; float:right">Forward</button>
+            </div>
+          </div>
+          <mat-tab-group class="baml_tabGroup col-md-12" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChange($event)">
+            <mat-tab *ngFor="let day of fiveDayWeather">
+              <div style="margin:20px">
+                <ng-template mat-tab-label>
+                  <ng-container *ngTemplateOutlet="tabTemplate;context:day"></ng-container>
+                </ng-template>
+                <div class="row" style="overflow-x: hidden">
+                  <div class="col-sm-3" style="width:80px; margin-left:12px" role="heading" aria-level="2">
+                    <svg xmlns="http://www.w3.org/2000/svg" tabindex="-1" id="" role="presentation" aria-hidden="true" enable-background="new 0 0 32 32"
+                      viewBox="0 0 32 32" focusable="false" x="0px" y="0px" xmlns:xml="http://www.w3.org/XML/1998/namespace"
+                      xml:space="preserve" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" xmlns:xml="http://www.w3.org/XML/1998/namespace">
+                      <path class="hcFill1 hcStroke1 hpFill1 hpStroke1 thFill1 thStroke1" fill="#ffffff" stroke="#666666" stroke-linecap="round"
+                        stroke-miterlimit="10" stroke-width="1.5" d="M 8.058 15.131 c 1.069 0 2.072 0.279 2.944 0.766 c 1.235 -3.017 4.196 -5.143 7.657 -5.143 c 0.129 0 0.255 0.011 0.382 0.017 C 19.063 10.378 19 10.061 19 10.061 c -0.535 -2.798 -2.991 -4.904 -5.941 -4.906 c -2.706 0.001 -4.969 1.783 -5.738 4.227 C 6.9 9.262 6.454 9.193 5.991 9.194 c -2.783 0.001 -5.039 2.256 -5.039 5.039 c -0.001 1.466 0.634 2.788 1.635 3.698 c 0 0 0.133 0.125 0.238 0.215 C 3.875 16.345 5.823 15.131 8.058 15.131 Z"
+                      />
+                      <path class="hcFill1 hcStroke1 hpFill1 hpStroke1 thFill1 thStroke1" fill="#ffffff" stroke="#666666" stroke-linecap="round"
+                        stroke-miterlimit="10" stroke-width="1.5" d="M 26.746 17.281 c -0.776 -3.609 -3.906 -6.337 -7.704 -6.511 c -0.127 -0.006 -0.253 -0.017 -0.382 -0.017 c -3.461 0 -6.422 2.127 -7.657 5.143 c -0.872 -0.486 -1.875 -0.766 -2.944 -0.766 c -2.235 0 -4.182 1.214 -5.232 3.015 C 2.304 19.041 2 20.078 2 21.189 c 0 3.346 2.712 6.058 6.058 6.058 l 17.968 -0.01 c 2.75 -0.02 4.974 -2.254 4.974 -5.008 C 31 19.719 29.153 17.647 26.746 17.281 Z"
+                      />
+                    </svg>
+                  </div>
+                  <div class="col-md-3 wtr_condiPrimary">
+                    <div class="wtr_condiTemp col-md-6">
+                      <p>
+                        <span class="wtr_currTemp">{{tempConvert(currentDayWeather.temperature)}}</span>{{tempUnitSuffix}}</p>
+                    </div>
+                  </div>
+
+                  <div class="col-sm-6">
+                    <div>
+                      <p>Preciptiation: {{floor(currentDayWeather.precipitation)}}%</p>
+                      <p>Wind: {{floor(currentDayWeather.wind)}}KMPH</p>
+                      <p>Humidity: {{floor(currentDayWeather.humidity)}}%</p>
+                    </div>
+                  </div>
+                </div>
+                <div class="baml_header col-md-3">
+                  <div role="heading" aria-level="2">{{currentDayWeather.shortDescription}} . {{currentDayWeather.daytime}}</div>
+                </div>
+                <div class="row" style="margin:0px">
+                  <div>
+                    <table class="table " style="text-align:center">
+                      <tr>
+                        <th>00:00</th>
+                        <th>03:00</th>
+                        <th>06:00</th>
+                        <th>09:00</th>
+                        <th>12:00</th>
+                        <th>15:00</th>
+                        <th>18:00</th>
+                        <th>21:00</th>
+                        <th>23:00</th>
+                      </tr>
+                    </table>
+                    <div style="margin:0px">
+                      <!-- #debug  <label>{{hourSelected}}</label> -->
+                      <input type="range" min="0" max="31" (change)="onTimeSlideChange($event)" [(ngModel)]="hourSelected" step="1" aria-label="Time"
+                        aria-valuetext="12:34, 9°, Precipitation: 20%" />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </mat-tab>
+          </mat-tab-group>
+
+          <mat-slide-toggle class="col-md-3" [checked]="tempUnitIsCelsius" (change)="onSlideChange($event)" color="Accent">{{tempUnitText}}</mat-slide-toggle>
+        </div>
+      </div>
+    </div>
+  </ng-container>
+</div>
