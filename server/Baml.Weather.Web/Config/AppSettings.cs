@@ -26,6 +26,7 @@
     {
         public string Key { get; set; }
         public string Url { get; set; }
+        public int CacheExpiryMinutes { get; set; }
     }
 
     public class AppSettings

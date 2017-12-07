@@ -34,6 +34,7 @@ namespace Baml.Weather.Web
             services.AddCors();
             services.AddMvc();
             services.AddScoped<IWeatherRepository, WeatherRepository>();
+            services.AddScoped<IWeatherApi, WeatherApi>();
             return services.BuildServiceProvider();
         }
 
