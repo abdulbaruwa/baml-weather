@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Baml.Weather.Web.Core.Dtos;
 using Baml.Weather.Web.Core.Models;
@@ -21,7 +22,8 @@ namespace Baml.Weather.Web
                 {
                     WeatherDay = rootItem.Day.ToShortDateString(),
                     Locale = locale,
-                    LocaleId = localeId
+                    LocaleId = localeId,
+                    TimeFetched = DateTimeOffset.Now
                 };
 
                 var details = list.Select(x => new TimedWeatherDetail()

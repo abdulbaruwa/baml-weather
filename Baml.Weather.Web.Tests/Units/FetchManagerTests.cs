@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 using Baml.Weather.Web.Config;
@@ -8,17 +9,18 @@ using Baml.Weather.Web.Core.Models;
 using Baml.Weather.Web.FetchManager;
 using Baml.Weather.Web.Interfaces;
 using Bogus;
+using Microsoft.Extensions.Configuration;
 using Moq;
+using Newtonsoft.Json;
 using Xunit;
 
-namespace Baml.Weather.Web.Tests.Units
+namespace Baml.Weather.Web.UnitTests.Unit
 {
     public class FetchManagerTests
     {
         [Fact]
         public async Task FetchAndSyncWeather_ReturnsCachedData_WhenCachedVersionIsStillValid()
         {
-
             var lastFetchTime = DateTimeOffset.Now.AddHours(-2).ToUniversalTime();
             var cacheWeatherOutput = new List<WeatherDto>() { new WeatherDto() { TimeFetched = lastFetchTime } };
             ;
@@ -27,25 +29,41 @@ namespace Baml.Weather.Web.Tests.Units
             // Goal is to create a cache that we only refresh when the data has expired.
             var mockWeatherApi = new Mock<IWeatherApi>();
             mockWeatherApi.Setup(api => api.GetWeatherForLocation(3)).Returns(Task.FromResult(TestDataGenerator.LocationWeather(3)));
-
             var mockRepo = new Mock<IWeatherRepository>();
-
             mockRepo.Setup(repo => repo.GetWeatherById(3)).Returns(cacheWeatherOutput.AsQueryable());
 
-            var sut = new FetchManager.FetchManager(mockWeatherApi.Object, mockRepo.Object, new OpenWeatherSettings());
-
+            // Act
+            var sut = new FetchManager.FetchManager(mockWeatherApi.Object, mockRepo.Object, new OpenWeatherSettings() { CacheExpiryMinutes = 180 });
             var result = (await sut.FetchAndSyncWeatherForLocationAsync(3)).FirstOrDefault();
 
+            // Assert
             Assert.NotNull(result);
             Assert.True(result.TimeFetched.Equals(lastFetchTime));
         }
 
-        public void FetchAndSyncWeather_ReturnsCachedDataIfAny_WhenThirdPartyCallFails()
+        [Fact]
+        public async Task FetchAndSynceWeather_ReturnsNewData_WhenCachedOneHasExpired()
         {
+            // Expire cache data, make it older than 4 hours
+            var lastFetchTime = DateTimeOffset.Now.AddHours(-4).ToUniversalTime();
+            var cacheWeatherOutput = new List<WeatherDto>() { new WeatherDto() { TimeFetched = lastFetchTime } };
 
+            var mockWeatherApi = new Mock<IWeatherApi>();
+            mockWeatherApi.Setup(api => api.GetWeatherForLocation(3)).Returns(Task.FromResult(TestDataGenerator.LocationWeather(3)));
+
+            var mockRepo = new Mock<IWeatherRepository>();
+            mockRepo.Setup(repo => repo.GetWeatherById(3)).Returns(cacheWeatherOutput.AsQueryable());
+
+            // Act
+            var sut = new FetchManager.FetchManager(mockWeatherApi.Object, mockRepo.Object, new OpenWeatherSettings() { CacheExpiryMinutes = 180 });
+            var result = (await sut.FetchAndSyncWeatherForLocationAsync(3)).FirstOrDefault();
+
+            // Assert
+            Assert.NotNull(result);
+            Assert.Equal(4, (result.TimeFetched - lastFetchTime).Hours);
         }
 
-        public void FetchAndSynceWeather_ReturnsNewData_WhenCachedOneHasExpired()
+        public async Task FetchAndSyncWeather_ReturnsCachedDataIfAny_WhenThirdPartyCallFails()
         {
 
         }
@@ -95,6 +113,7 @@ namespace Baml.Weather.Web.Tests.Units
                 .RuleFor(f => f.clouds, x => clouds.Generate());
 
             var locationWeather = new Faker<LocationWeather>()
+
                 .RuleFor(f => f.city, c => city.Generate())
                 .RuleFor(f => f.list, l => list.Generate(3).ToList());
             return locationWeather.Generate();
