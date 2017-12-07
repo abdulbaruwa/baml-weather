@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Headers, Http, Response } from '@angular/http';
-import 'rxjs/add/operator/catch';
 import 'rxjs/add/operator/map';
+import 'rxjs/add/operator/catch';
 import 'rxjs/add/observable/throw';
 
 import { DayWeather, TimedWeatherDetail, WeatherLocation } from '../models/weather';
@@ -12,6 +12,8 @@ import { Console } from '@angular/core/src/console';
 export class WeatherService {
 
   constructor(private http: Http) { }
+
+  // Abdul TODO: Move all these to environment.config
   private weatherServiceUrl = '/api/weather/getbylocation/';
   private locationSearchServiceUrl = '/api/weather/searchlocation/';
   private serviceBase = 'http://localhost:63494';
@@ -35,6 +37,8 @@ export class WeatherService {
   }
 
   getWeatherForecast(locationId: number): Promise<Array<DayWeather>>{
+    // Abdul TDOO: Time permiting Bring in a logging component
+    console.log(`Service called for id: ${locationId}`)
     return this.http
     .get(this.serviceBase + this.weatherServiceUrl + `${locationId}`)
     .toPromise()
