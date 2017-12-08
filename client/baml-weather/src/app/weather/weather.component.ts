@@ -101,6 +101,7 @@ export class WeatherComponent implements OnInit {
   }
 
   private getWeatherForecast(locationId: number){
+    
     this.weatherService.getWeatherForecast(locationId).then(forecastArray => {
       this.fiveDayWeather = forecastArray;
       this.setCurrentDayWeatherEntity(this.selectedTabIndex, this.hourSelected);
