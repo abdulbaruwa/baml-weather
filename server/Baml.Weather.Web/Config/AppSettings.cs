@@ -9,7 +9,7 @@
     {
         public LogLevel LogLevel { get; set; }
     }
-
+    
     public class Console
     {
         public LogLevel LogLevel { get; set; }

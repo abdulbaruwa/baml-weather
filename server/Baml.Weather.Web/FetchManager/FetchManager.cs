@@ -24,12 +24,18 @@ namespace Baml.Weather.Web.FetchManager
         public async Task<IEnumerable<WeatherDto>> FetchAndSyncWeatherForLocationAsync(int locationId)
         {
             // Return the the unexpired cached weather entity if any
-            var cachedWeatherList = _repository.GetWeatherById(locationId).ToList();
-            var cachedWeather = cachedWeatherList.Where(x => (DateTimeOffset.UtcNow - x.TimeFetched).TotalMinutes <= _openWeatherSettings.CacheExpiryMinutes);
-            if (cachedWeather.Any()) return cachedWeather;
+            var cachedWeather = await _repository.GetWeatherById(locationId);
+            if (cachedWeather.Any(x => (DateTimeOffset.UtcNow - x.TimeFetched).TotalMinutes <= _openWeatherSettings.CacheExpiryMinutes))
+            {
+                return cachedWeather;
+            }
 
             var locationWeather = await _weatherApi.GetWeatherForLocation(locationId);
             var weatherDtos = locationWeather.ToWeatherDtoList();
+            if (weatherDtos.Any())
+            {
+                await _repository.UpsertWeatherDtoAsync(weatherDtos);
+            }
             return weatherDtos;
         }
     }

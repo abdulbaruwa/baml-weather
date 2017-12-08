@@ -10,7 +10,7 @@ namespace Baml.Weather.Web
     {
         public static List<WeatherDto> ToWeatherDtoList(this LocationWeather locationWeather)
         {
-            if (locationWeather.list == null) return new List<WeatherDto>();
+            if(locationWeather.list == null)return new List<WeatherDto>();
             var grouped = locationWeather.list.GroupBy(n => n.Day);
             var weatherDtos = new List<WeatherDto>();
             var locale = locationWeather.city.name;
@@ -29,12 +29,13 @@ namespace Baml.Weather.Web
                 var details = list.Select(x => new TimedWeatherDetail()
                 {
                     Temperature = x.main.temp,
-                    Humidity = x.main.humidity,
-                    Wind = x.wind.speed,
-                    WindDirection = x.wind.deg,
-                    ShortDescription = x.weather.FirstOrDefault()?.description,
+                    Humidity = x.main?.humidity,
+                    Wind = x.wind?.speed,
+                    WindDirection = x.wind?.deg,
+                    ShortDescription = x.weather?.FirstOrDefault()?.description,
                     DayTime = x.DateTimeOffset,
-                    Precipitation = x.snow.ThreeHourVolume,
+                    Precipitation = x.snow?.ThreeHourVolume,
+
                 }).ToArray();
 
                 weatherDto.TimedWeatherDetail = details;

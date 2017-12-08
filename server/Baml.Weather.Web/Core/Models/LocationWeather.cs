@@ -4,8 +4,6 @@ using Newtonsoft.Json;
 
 namespace Baml.Weather.Web.Core.Models
 {
-    // Model based on OpenWeather OData schema http://openweathermap.org/forecast5
-
     public class Main
     {
         public double temp { get; set; }
@@ -80,7 +78,7 @@ namespace Baml.Weather.Web.Core.Models
         public Coord coord { get; set; }
         public string country { get; set; }
     }
-    public class Location
+ public class Location
     {
         public int id { get; set; }
         public string name { get; set; }

@@ -11,6 +11,7 @@ namespace Baml.Weather.Web.Interfaces
         Task<List<Location>> CityListAsyc();
         Task LoadStaticCityData();
         IQueryable<Location> FindCity(string name);
-        IQueryable<WeatherDto> GetWeatherById(int locationId);
+        Task<List<WeatherDto>> GetWeatherById(int locationId);
+        Task UpsertWeatherDtoAsync(List<WeatherDto> weatherDtos);
     }
 }

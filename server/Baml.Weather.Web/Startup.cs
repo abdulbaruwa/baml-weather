@@ -23,18 +23,20 @@ namespace Baml.Weather.Web
         {
             Configuration = configuration;
         }
-
+        
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             var appConfig = Configuration.Get<AppSettings>();
             services.AddScoped<OpenWeatherSettings>(cfg => appConfig.OpenWeatherSettings);
             services.AddScoped<IFetchManager, FetchManager.FetchManager>();
+            services.AddScoped<IWeatherApi, WeatherApi>();
+            services.AddScoped<IWeatherRepository, WeatherRepository>();
+
             services.AddDbContext<WeatherDbContext>(option => option.UseInMemoryDatabase("WeatherInMemoryDatabase"));
+
             services.AddCors();
             services.AddMvc();
-            services.AddScoped<IWeatherRepository, WeatherRepository>();
-            services.AddScoped<IWeatherApi, WeatherApi>();
             return services.BuildServiceProvider();
         }
 

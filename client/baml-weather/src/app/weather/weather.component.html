@@ -1,7 +1,7 @@
 <div class="">
   <ng-template #tabTemplate let-dayEntity="weatherDay">
     <div>
-      <div>{{dayEntity}}</div>
+      <div>{{dayEntity | date : format: mediumDate}}</div>
     </div>
 
   </ng-template>
@@ -20,7 +20,7 @@
                 <mat-form-field class="weather-local-from-field">
                     <input #searchBox id="search-box" matInput placeholder="City" aria-label="State" [value]="selectedLocation.name"  [matAutocomplete]="auto"  (keyup)="search(searchBox.value)" >
                     <mat-autocomplete #auto="matAutocomplete">
-                      <mat-option *ngFor="let state of locales | async" [value]="state.name" (onSelectionChange)="onLocationChange($event)">
+                      <mat-option *ngFor="let state of locales | async" [value]="state" (onSelectionChange)="onLocationChange($event)">
                         <span>{{state.name}}</span> |
                         <small>Country: {{state.country}}</small>
                       </mat-option>

@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { DayWeather, TimedWeatherDetail, WeatherLocation } from '../models/weather';
+import { WeatherForecast, TimedWeatherDetail, ForecastLocation } from '../models/weather';
 import { WeatherService } from '../services/weather.service';
 import { Observable } from 'rxjs/Observable';
 import { Subject } from 'rxjs/Subject';
@@ -19,10 +19,10 @@ import 'rxjs/add/operator/distinctUntilChanged';
 
 })
 export class WeatherComponent implements OnInit {
-  locales: Observable<WeatherLocation[]>
+  locales: Observable<ForecastLocation[]>
   private searchTerms = new Subject<string>()
   hourSelected: number = 0;
-  fiveDayWeather: DayWeather[] = [];
+  fiveDayWeather: WeatherForecast[] = [];
   selectedTabIndex: number = 0;
   tempUnitIsCelsius: boolean = true;
   tempUnitText: string = "Celsius";
@@ -30,15 +30,15 @@ export class WeatherComponent implements OnInit {
   date = new Date().toLocaleDateString();
   currentDayWeather: TimedWeatherDetail;
   lastUpdate: string;
-  selectedLocation: WeatherLocation;
+  selectedLocation: ForecastLocation;
 
   onLocationChange(event) {
     if (event == undefined) return;
     if (!event.source.selected) return;
-    this.selectedLocation = event.source;
+    this.selectedLocation = event.source.value;
     console.log(event.source.value);
     
-    this.getWeatherForecast(this.selectedLocation.localeId)
+    this.getWeatherForecast(this.selectedLocation.id)
   }
 
   onTabChange(event) {
@@ -101,7 +101,7 @@ export class WeatherComponent implements OnInit {
   }
 
   private getWeatherForecast(locationId: number){
-    this.weatherService.getWeatherForecast(3).then(forecastArray => {
+    this.weatherService.getWeatherForecast(locationId).then(forecastArray => {
       this.fiveDayWeather = forecastArray;
       this.setCurrentDayWeatherEntity(this.selectedTabIndex, this.hourSelected);
     });
@@ -109,24 +109,24 @@ export class WeatherComponent implements OnInit {
 
   ngOnInit(): void {
     // default location 
-    this.selectedLocation = {name:'London', localeId: 23}
+    this.selectedLocation = {name:'London', id: 2643743, country:'UK'}
     // Init search 
     this.locales = this.searchTerms
-      .debounceTime(300)
+      .debounceTime(250)
       .distinctUntilChanged()
       .switchMap(term => {
         console.log('In Search Observable with term ' + term);
-        return term ? this.weatherService.search(term) : Observable.of<WeatherLocation[]>([])
+        return term ? this.weatherService.search(term) : Observable.of<ForecastLocation[]>([])
       })
       .catch(error => {
 
         // Ideally error handling will be different than just spewing to the console.
         console.log('Exception occured in Weather observable search: ${error}');
-        return Observable.of<WeatherLocation[]>([]);
+        return Observable.of<ForecastLocation[]>([]);
       })
     
-    this.getWeatherForecast(3);
-    this.lastUpdate = "03 December, 20:35";
+    this.getWeatherForecast(this.selectedLocation.id);
+    this.lastUpdate =  new Date().toLocaleDateString();
 
   }
 

@@ -6,7 +6,7 @@ import 'rxjs/add/operator/map';
 import 'rxjs/add/observable/throw';
 import { MockBackend, MockConnection } from '@angular/http/testing';
 import { HttpModule, Http, XHRBackend, Response, ResponseOptions } from '@angular/http';
-import { DayWeather, TimedWeatherDetail, WeatherLocation } from '../models/weather';
+import { WeatherForecast, TimedWeatherDetail, ForecastLocation } from '../models/weather';
 import { Observable } from 'rxjs/Observable';
 import { Console } from '@angular/core/src/console';
 
@@ -46,7 +46,7 @@ const buildWeatherData = () => [
     {temperature:-2, wind:22,humidity:32, shortDescription:"Cold Windy Day", dayTime:"", precipitation:0, hour:11},
     {temperature:-2, wind:22,humidity:32, shortDescription:"Cold Windy Day", dayTime:"", precipitation:0, hour:13},
   ] },
-] as DayWeather[]
+] as WeatherForecast[]
 
 describe('WeatherService', () => {
   beforeEach(() => {
@@ -77,7 +77,7 @@ describe('WeatherService', () => {
       let service: WeatherService;
       let response: Response;
       let locationId: number = 0;
-      let dummyDayWeatherData: DayWeather[];
+      let dummyDayWeatherData: WeatherForecast[];
       beforeEach(inject([Http, XHRBackend], (http: Http, be: MockBackend) => {
         backend = be;
         service = new WeatherService(http);

@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using Baml.Weather.Web.Core.Dtos;
 using Baml.Weather.Web.Core.Models;
+using Baml.Weather.Web.FetchManager;
 using Baml.Weather.Web.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -27,7 +28,7 @@ namespace Baml.Weather.Web.Api
         }
 
         [HttpGet("searchlocation/{location}")]
-        public Task<List<Location>> SearchLocation(string location)
+        public  Task<List<Location>> SearchLocation(string location)
         {
             return _weatherRepository.FindCity(location).ToListAsync();
         }
