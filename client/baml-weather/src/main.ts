@@ -4,20 +4,28 @@ import { platformBrowserDynamic }             from '@angular/platform-browser-dy
 import { AppModule }                          from './app/app.module';
 import { environment }                        from './environments/environment';
 import { environment as environmentPromise }  from './environments/environment';
-
-
-// if (environment.production) {
-//   enableProdMode();
-// }
-// platformBrowserDynamic().bootstrapModule(AppModule)
-// .catch(err => console.log(err));
+if (environment.production) {
+  enableProdMode();
+}
 
 platformBrowserDynamic().bootstrapModule(AppModule)
   .catch(err => console.log(err));
 
-  environmentPromise.then(environment => {
-      if (environment["production"]) {
-        enableProdMode();
-      }
-      platformBrowserDynamic().bootstrapModule(AppModule);
-    });
+
+ 
+//// Reverted as it intermitently blows bootstraping of the Appp
+// // if (environment.production) {
+// //   enableProdMode();
+// // }
+// platformBrowserDynamic().bootstrapModule(AppModule)
+// .catch(err => console.log(err))
+
+// platformBrowserDynamic().bootstrapModule(AppModule)
+//   .catch(err => console.log(err));
+
+//   environmentPromise.then(environment => {
+//       if (environment["production"]) {
+//         enableProdMode();
+//       }
+//       platformBrowserDynamic().bootstrapModule(AppModule);
+//     });

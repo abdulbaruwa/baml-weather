@@ -14,20 +14,12 @@ export class WeatherService {
   // Abdul TODO: Move all these to environment.config
   private weatherServiceUrl = '/api/weather/getbylocation/';
   private locationSearchServiceUrl = '/api/weather/searchlocation/';
+  
   private serviceBase = "http://localhost:63494";
 
    constructor(private http: Http) {
-     this.getConfigAsync();
   }
 
-  async getConfigAsync()
-  {
-   await environment.then(environment => {
-      // Get base service address from environment file
-      //ABDUL TODO Unable to await this ... more work needs to be done here
-      this.serviceBase = environment['api_url']
-    });
-  }
 
   search(term: string): Observable<ForecastLocation[]> {
     var url = `${this.serviceBase}${this.locationSearchServiceUrl}${term}`;
@@ -64,3 +56,12 @@ export class WeatherService {
     return Promise.reject(error.message || error);
   }
 }
+//// Reverted as it intermitently blows bootstraping of the Appp
+  // async getConfigAsync()
+  // {
+  //  await environment.then(environment => {
+  //     // Get base service address from environment file
+  //     //ABDUL TODO Unable to await this ... more work needs to be done here
+  //     this.serviceBase = environment['api_url']
+  //   });
+  // }
