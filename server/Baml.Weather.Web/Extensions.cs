@@ -11,7 +11,7 @@ namespace Baml.Weather.Web
         public static List<WeatherDto> ToWeatherDtoList(this LocationWeather locationWeather)
         {
             if(locationWeather.list == null)return new List<WeatherDto>();
-            var grouped = locationWeather.list.GroupBy(n => n.Day);
+            var grouped = locationWeather.list.GroupBy(n => n.Day).Take(5);
             var weatherDtos = new List<WeatherDto>();
             var locale = locationWeather.city.name;
             var localeId = locationWeather.city.id;

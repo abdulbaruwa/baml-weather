@@ -7,11 +7,6 @@ using Refit;
 
 namespace Baml.Weather.Web.FetchManager
 {
-    public interface IWeatherApi
-    {
-        Task<LocationWeather> GetWeatherForLocation(int locationId);
-    }
-
     class WeatherApi : IWeatherApi
     {
         private readonly OpenWeatherSettings _openWeatherSettings;

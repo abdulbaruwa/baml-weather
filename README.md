@@ -18,7 +18,7 @@ A simple Weather App borrows more than a few ideas from common weather portals.
 Server: 
 
 * Load and Update Nuget dependencies
-* Start Ctrl F5
+* Select Baml.Weather.Web in "Run" drop down to run in VS Self-Host environment (Ctrl + F5)
 
 Client:
 
@@ -31,5 +31,5 @@ Server:
 OpenWeatherTheMap settings is in the appsettings.json file in the Server project. Add relevant key and url to run from other than the (limited) Free API.
 
 Client:
-Base URL address for the service can be set at ..client\baml-weather\src\assets\environment.json
+Base URL address for the service can be set at ..client\baml-weather\src\assets\config.dev.json
 ### 
