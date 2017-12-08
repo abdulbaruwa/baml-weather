@@ -1,8 +1,10 @@
-import { Component, OnInit } from '@angular/core';
-import { WeatherForecast, TimedWeatherDetail, ForecastLocation } from '../models/weather';
-import { WeatherService } from '../services/weather.service';
-import { Observable } from 'rxjs/Observable';
-import { Subject } from 'rxjs/Subject';
+import { Component, OnInit }        from '@angular/core';
+import { WeatherForecast,
+         TimedWeatherDetail, 
+         ForecastLocation }         from '../models/weather';
+import { WeatherService }           from '../services/weather.service';
+import { Observable }               from 'rxjs/Observable';
+import { Subject }                  from 'rxjs/Subject';
 
 // Bring in Reactive extension namespaces
 import 'rxjs/add/observable/of';
@@ -16,8 +18,8 @@ import 'rxjs/add/operator/distinctUntilChanged';
   templateUrl: './weather.component.html',
   styleUrls: ['./weather.component.css'],
   providers: [WeatherService]
-
 })
+
 export class WeatherComponent implements OnInit {
   locales: Observable<ForecastLocation[]>
   private searchTerms = new Subject<string>()
@@ -50,6 +52,18 @@ export class WeatherComponent implements OnInit {
   onTimeSlideChange(event) {
     if (event == undefined) return;
     this.setCurrentDayWeatherEntity(this.selectedTabIndex, this.hourSelected)
+  }
+  
+  onBackOrForwardButtonClicked(action: string){
+    console.log(action);
+    if(action == 'back'){
+      if(this.selectedTabIndex == 0) return;
+      this.selectedTabIndex = this.selectedTabIndex - 1;
+    }
+    else{
+      if(this.selectedTabIndex == this.fiveDayWeather.length-1) return;
+      this.selectedTabIndex = this.selectedTabIndex + 1
+    }
   }
 
   onSlideChange(event) {
@@ -101,7 +115,6 @@ export class WeatherComponent implements OnInit {
   }
 
   private getWeatherForecast(locationId: number){
-    
     this.weatherService.getWeatherForecast(locationId).then(forecastArray => {
       this.fiveDayWeather = forecastArray;
       this.setCurrentDayWeatherEntity(this.selectedTabIndex, this.hourSelected);
@@ -117,7 +130,7 @@ export class WeatherComponent implements OnInit {
       .distinctUntilChanged()
       .switchMap(term => {
         console.log('In Search Observable with term ' + term);
-        return term ? this.weatherService.search(term) : Observable.of<ForecastLocation[]>([])
+        return term ? this.weatherService.searchCity(term) : Observable.of<ForecastLocation[]>([])
       })
       .catch(error => {
 
@@ -128,9 +141,7 @@ export class WeatherComponent implements OnInit {
     
     this.getWeatherForecast(this.selectedLocation.id);
     this.lastUpdate =  new Date().toLocaleDateString();
-
   }
-
 }
 
 

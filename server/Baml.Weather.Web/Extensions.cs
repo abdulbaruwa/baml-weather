@@ -20,7 +20,7 @@ namespace Baml.Weather.Web
                 var rootItem = list.First();
                 var weatherDto = new WeatherDto
                 {
-                    WeatherDay = rootItem.Day.ToShortDateString(),
+                    WeatherDay = rootItem.Day.ToString("ddd dd-MMM-yy"),
                     Locale = locale,
                     LocaleId = localeId,
                     TimeFetched = DateTimeOffset.Now

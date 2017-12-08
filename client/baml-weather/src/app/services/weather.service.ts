@@ -8,21 +8,24 @@ import { WeatherForecast, TimedWeatherDetail, ForecastLocation } from '../models
 import { Observable } from 'rxjs/Observable';
 import { Console } from '@angular/core/src/console';
 import { environment } from '../../environments/environment';
+import { AppConfig } from '../app.config';
+
+
 @Injectable()
 export class WeatherService {
-
-  // Abdul TODO: Move all these to environment.config
   private weatherServiceUrl = '/api/weather/getbylocation/';
   private locationSearchServiceUrl = '/api/weather/searchlocation/';
   
-  private serviceBase = "http://localhost:63494";
+  private serviceBase = "";//http://localhost:63494";
 
-   constructor(private http: Http) {
+   constructor(private http: Http, private config: AppConfig) {
+     this.serviceBase = config.getConfig("api_url");
+     console.log(config.getConfig("api_url"))
   }
 
-
-  search(term: string): Observable<ForecastLocation[]> {
-    var url = `${this.serviceBase}${this.locationSearchServiceUrl}${term}`;
+  /* search static list of cities */
+  searchCity(city: string): Observable<ForecastLocation[]> {
+    var url = `${this.serviceBase}${this.locationSearchServiceUrl}${city}`;
     console.log(url);
     return this.http
       .get(url)
@@ -38,8 +41,10 @@ export class WeatherService {
       });
   }
 
+  /*The weather forecast be calling on to our WebService */
   getWeatherForecast(locationId: number): Promise<Array<WeatherForecast>> {
-    // Abdul TDOO: Time permiting Bring in a logging component
+    // Abdul TODO: Time permiting Bring in a logging component
+    console.log(environment.production);
     console.log(`Service called for id: ${locationId}`)
     return this.http
       .get(this.serviceBase + this.weatherServiceUrl + `${locationId}`)
@@ -56,12 +61,3 @@ export class WeatherService {
     return Promise.reject(error.message || error);
   }
 }
-//// Reverted as it intermitently blows bootstraping of the Appp
-  // async getConfigAsync()
-  // {
-  //  await environment.then(environment => {
-  //     // Get base service address from environment file
-  //     //ABDUL TODO Unable to await this ... more work needs to be done here
-  //     this.serviceBase = environment['api_url']
-  //   });
-  // }

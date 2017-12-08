@@ -32,13 +32,5 @@ namespace Baml.Weather.Web.Api
         {
             return _weatherRepository.FindCity(location).ToListAsync();
         }
-
-        //[HttpGet("search")]
-        //public async Task Search()
-        //{
-        //    var c = await _weatherRepository.CityListAsyc();
-        //    await _weatherRepository.LoadStaticCityData();
-        //    var y = await _weatherRepository.CityListAsyc();
-        //}
     }
 }

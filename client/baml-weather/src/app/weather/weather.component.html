@@ -13,16 +13,16 @@
             <div class="row">
               <div class="baml_header col-md-8">
                 <!-- <div role="heading" aria-level="2">{{currentDayWeather.locale}}</div> -->
-                <div role="heading" aria-level="2">UPDATED {{lastUpdate}}</div>
+                <div role="heading" aria-level="2">UPDATED {{lastUpdate | date : format : mediumDate}}</div>
               </div>
 
               <div class="col-md-4">
                 <mat-form-field class="weather-local-from-field">
-                    <input #searchBox id="search-box" matInput placeholder="City" aria-label="State" [value]="selectedLocation.name"  [matAutocomplete]="auto"  (keyup)="search(searchBox.value)" >
+                    <input #searchBox id="search-box" matInput placeholder="City" aria-label="city" [value]="selectedLocation.name"  [matAutocomplete]="auto"  (keyup)="search(searchBox.value)" >
                     <mat-autocomplete #auto="matAutocomplete">
-                      <mat-option *ngFor="let state of locales | async" [value]="state" (onSelectionChange)="onLocationChange($event)">
-                        <span>{{state.name}}</span> |
-                        <small>Country: {{state.country}}</small>
+                      <mat-option *ngFor="let city of locales | async" [value]="city" (onSelectionChange)="onLocationChange($event)">
+                        <span>{{city.name}}</span> |
+                        <small>Country: {{city.country}}</small>
                       </mat-option>
                     </mat-autocomplete>
                   </mat-form-field>
@@ -31,8 +31,8 @@
           </div>
           <div class="col-md-12">
             <div class="row">
-              <button mat-raised-button style="width:80px">Back</button>
-              <button mat-raised-button style="width:80px; float:right">Forward</button>
+              <button mat-raised-button (click)="onBackOrForwardButtonClicked('back')" style="width:80px">Back</button>
+              <button mat-raised-button (click)="onBackOrForwardButtonClicked('forward')" style="width:80px; float:right">Forward</button>
             </div>
           </div>
           <mat-tab-group class="baml_tabGroup col-md-12" [(selectedIndex)]="selectedTabIndex" (selectedTabChange)="onTabChange($event)">
@@ -98,7 +98,6 @@
               </div>
             </mat-tab>
           </mat-tab-group>
-
           <mat-slide-toggle class="col-md-3" [checked]="tempUnitIsCelsius" (change)="onSlideChange($event)" color="Accent">{{tempUnitText}}</mat-slide-toggle>
         </div>
       </div>
